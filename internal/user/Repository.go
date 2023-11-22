@@ -18,7 +18,7 @@ func NewRepository(dns string) *Repository {
 	return &Repository{conn: conn}
 }
 
-func (r *Repository) InsertUser() (int, error) {
+func (r *Repository) Insert() (int, error) {
 	var userId int
 	err := r.conn.QueryRow(context.Background(), "INSERT INTO users (fname, lname, age, email, passwordHash RETURNING userId").Scan(&userId)
 	if err != nil {
@@ -28,7 +28,7 @@ func (r *Repository) InsertUser() (int, error) {
 	return userId, nil
 }
 
-func (r *Repository) UpdateUser(user *User) (*User, error) {
+func (r *Repository) Update(user *User) (*User, error) {
 	var u User
 	err := r.conn.QueryRow(context.Background(), "UPDATE user SET fname= $1, lname=$2, age=$3, email=$4 $passwordHash=$5 WHERE userId=$6 RETURNING *",
 		user.Fname, user.Lname, user.Age, user.Email, user.PasswordHash, user.UserID).Scan(&u.Fname, &u.Lname, &u.Age, &u.Email, &u.PasswordHash)
@@ -39,7 +39,7 @@ func (r *Repository) UpdateUser(user *User) (*User, error) {
 	return &u, nil
 }
 
-func (r *Repository) DeleteUser(userId int) error {
+func (r *Repository) Delete(userId int) error {
 	_, err := r.conn.Exec(context.Background(), "DELETE FROM users WHERE userID=$1", userId)
 	if err != nil {
 		return err
@@ -48,7 +48,7 @@ func (r *Repository) DeleteUser(userId int) error {
 	return nil
 }
 
-func (r *Repository) SelectUsers() ([]User, error) {
+func (r *Repository) SelectAll() ([]User, error) {
 	var users []User
 	rows, err := r.conn.Query(context.Background(), "SELECT userId, fname, lname, age, email, passwordHasg FROM users")
 	if err != nil {
@@ -67,7 +67,7 @@ func (r *Repository) SelectUsers() ([]User, error) {
 	return users, nil
 }
 
-func (r Repository) SelectUser(userId int) (*User, error) {
+func (r Repository) Select(userId int) (*User, error) {
 	var user User
 	err := r.conn.QueryRow(context.Background(), "SELECT userId, fname, lname, age, email, passwordHash FROM users WHERE userId =$1", userId).
 		Scan(&user.UserID, &user.Fname, &user.Lname, &user.Age, &user.Email, &user.PasswordHash)
