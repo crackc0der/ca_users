@@ -19,15 +19,15 @@ func NewRepository(dns string) *Repository {
 }
 
 func (r *Repository) Insert(ctx context.Context, user *User) (*User, error) {
-	var userId int
-	err := r.conn.QueryRow(ctx, "INSERT INTO users (fname, lname, age, email, passwordHash) VALUES ($1, $2, $3, $4, $5) RETURNING userId",
-		user.Fname, user.Lname, user.Age, user.Email, user.PasswordHash).Scan(&userId)
+	var updatedUser User
+	err := r.conn.QueryRow(ctx, "INSERT INTO users (fname, lname, age, email, passwordHash) VALUES ($1, $2, $3, $4, $5) RETURNING userId, fname, lname, age, email, passwordHash",
+		user.Fname, user.Lname, user.Age, user.Email, user.PasswordHash).Scan(&updatedUser.UserID, &updatedUser.Fname,
+		&updatedUser.Lname, &updatedUser.Age, &updatedUser.Email, &updatedUser.PasswordHash)
 	if err != nil {
 		return nil, err
 	}
 
-	updatedUser, _ := r.Select(ctx, userId)
-	return updatedUser, nil
+	return &updatedUser, nil
 }
 
 func (r *Repository) Update(ctx context.Context, user *User) (*User, error) {
