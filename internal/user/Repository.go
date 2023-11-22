@@ -96,7 +96,7 @@ func (r Repository) Select(ctx context.Context, userID int) (*User, error) {
 		Scan(&user.UserID, &user.Fname, &user.Lname, &user.Age, &user.Email, &user.PasswordHash)
 
 	if err != nil {
-		return nil, fmt.Errorf("erorr: %w", err)
+		return nil, fmt.Errorf("error: %w", err)
 	}
 
 	return &user, nil
