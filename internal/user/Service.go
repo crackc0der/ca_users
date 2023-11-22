@@ -7,12 +7,14 @@ type repository interface {
 	Update(ctx context.Context, user *User) (*User, error)
 	Delete(ctx context.Context) error
 	SelectAll(ctx context.Context) ([]User, error)
-	Select(ctx, userId int) (*User, error)
+	Select(ctx, userID int) (*User, error)
 }
 
-func NewService() (*Service, error) {
+func NewService(repo *Repository) *Service {
 
+	return &Service{repo: repo}
 }
 
 type Service struct {
+	repo *Repository
 }
