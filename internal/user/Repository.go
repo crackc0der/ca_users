@@ -18,19 +18,21 @@ func NewRepository(dns string) *Repository {
 	return &Repository{conn: conn}
 }
 
-func (r *Repository) Insert() (int, error) {
+func (r *Repository) Insert(ctx context.Context, user *User) (*User, error) {
 	var userId int
-	err := r.conn.QueryRow(context.Background(), "INSERT INTO users (fname, lname, age, email, passwordHash RETURNING userId").Scan(&userId)
+	err := r.conn.QueryRow(ctx, "INSERT INTO users (fname, lname, age, email, passwordHash) VALUES ($1, $2, $3, $4, $5) RETURNING userId",
+		user.Fname, user.Lname, user.Age, user.Email, user.PasswordHash).Scan(&userId)
 	if err != nil {
-		return -1, err
+		return nil, err
 	}
 
-	return userId, nil
+	updatedUser, _ := r.Select(ctx, userId)
+	return updatedUser, nil
 }
 
-func (r *Repository) Update(user *User) (*User, error) {
+func (r *Repository) Update(ctx context.Context, user *User) (*User, error) {
 	var u User
-	err := r.conn.QueryRow(context.Background(), "UPDATE user SET fname= $1, lname=$2, age=$3, email=$4 $passwordHash=$5 WHERE userId=$6 RETURNING *",
+	err := r.conn.QueryRow(ctx, "UPDATE user SET fname= $1, lname=$2, age=$3, email=$4 $passwordHash=$5 WHERE userId=$6 RETURNING *",
 		user.Fname, user.Lname, user.Age, user.Email, user.PasswordHash, user.UserID).Scan(&u.Fname, &u.Lname, &u.Age, &u.Email, &u.PasswordHash)
 	if err != nil {
 		return nil, err
@@ -39,8 +41,8 @@ func (r *Repository) Update(user *User) (*User, error) {
 	return &u, nil
 }
 
-func (r *Repository) Delete(userId int) error {
-	_, err := r.conn.Exec(context.Background(), "DELETE FROM users WHERE userID=$1", userId)
+func (r *Repository) Delete(ctx context.Context, userID int) error {
+	_, err := r.conn.Exec(ctx, "DELETE FROM users WHERE userID=$1", userID)
 	if err != nil {
 		return err
 	}
@@ -48,9 +50,9 @@ func (r *Repository) Delete(userId int) error {
 	return nil
 }
 
-func (r *Repository) SelectAll() ([]User, error) {
+func (r *Repository) SelectAll(ctx context.Context) ([]User, error) {
 	var users []User
-	rows, err := r.conn.Query(context.Background(), "SELECT userId, fname, lname, age, email, passwordHasg FROM users")
+	rows, err := r.conn.Query(ctx, "SELECT userId, fname, lname, age, email, passwordHasg FROM users")
 	if err != nil {
 		return nil, err
 	}
@@ -67,9 +69,9 @@ func (r *Repository) SelectAll() ([]User, error) {
 	return users, nil
 }
 
-func (r Repository) Select(userId int) (*User, error) {
+func (r Repository) Select(ctx context.Context, userId int) (*User, error) {
 	var user User
-	err := r.conn.QueryRow(context.Background(), "SELECT userId, fname, lname, age, email, passwordHash FROM users WHERE userId =$1", userId).
+	err := r.conn.QueryRow(ctx, "SELECT userId, fname, lname, age, email, passwordHash FROM users WHERE userId =$1", userId).
 		Scan(&user.UserID, &user.Fname, &user.Lname, &user.Age, &user.Email, &user.PasswordHash)
 	if err != nil {
 		return nil, err
