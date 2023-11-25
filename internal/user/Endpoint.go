@@ -28,12 +28,14 @@ func (e *Endpoint) GetUser(writer http.ResponseWriter, request *http.Request) {
 		http.Error(writer, err.Error(), http.StatusBadRequest)
 	}
 
-	user, err := e.service.GetUser(request.Context(), 45)
+	user, err := e.service.GetUser(request.Context(), userID)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusBadRequest)
 	}
 
-	json.NewEncoder(writer).Encode(user)
+	if err := json.NewEncoder(writer).Encode(&user); err != nil {
+		http.Error(writer, err.Error(), http.StatusBadRequest)
+	}
 }
 
 func (e *Endpoint) AddUser(writer http.ResponseWriter, request *http.Request) {
