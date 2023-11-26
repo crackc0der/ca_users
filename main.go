@@ -3,7 +3,9 @@ package main
 import (
 	"ca/internal/user"
 	"log"
+	"log/slog"
 	"net/http"
+	"os"
 	"time"
 
 	//nolint
@@ -12,8 +14,9 @@ import (
 
 func main() {
 	router := mux.NewRouter()
-	dsn := "postgres"
+	dsn := "postgres://postgres:example@localhost:5432/users?sslmode=disable"
 	timeout := 10
+	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 
 	repository, err := user.NewRepository(dsn)
 
@@ -23,7 +26,7 @@ func main() {
 
 	service := user.NewService(repository)
 
-	endpoint := user.NewEndpoint(service)
+	endpoint := user.NewEndpoint(service, logger)
 
 	router.HandleFunc("/", endpoint.GetAllUsers)
 	router.HandleFunc("/add", endpoint.AddUser)
