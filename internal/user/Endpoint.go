@@ -5,6 +5,9 @@ import (
 	"encoding/json"
 	"log/slog"
 	"net/http"
+	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 type service interface {
@@ -25,14 +28,15 @@ type Endpoint struct {
 }
 
 func (e *Endpoint) GetUser(writer http.ResponseWriter, request *http.Request) {
-	var userID int
-	if err := json.NewDecoder(request.Body).Decode(&userID); err != nil {
+	vars := mux.Vars(request)
+	userID, err := strconv.Atoi(vars["id"])
+	if err != nil {
 		e.log.Error(err.Error())
 	}
 
 	user, err := e.service.GetUser(request.Context(), userID)
 	if err != nil {
-		e.log.Error(err.Error())
+		e.log.Error("Error in method GetUser: " + err.Error())
 	}
 
 	if err := json.NewEncoder(writer).Encode(&user); err != nil {

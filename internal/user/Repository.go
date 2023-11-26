@@ -31,7 +31,7 @@ func (r *Repository) Insert(ctx context.Context, user *User) (*User, error) {
 		&newUser.Lname, &newUser.Age, &newUser.Email, &newUser.PasswordHash)
 
 	if err != nil {
-		return nil, fmt.Errorf("error INSERT: %w", err)
+		return nil, fmt.Errorf("error insert: %w", err)
 	}
 
 	return &newUser, nil
@@ -90,13 +90,13 @@ func (r *Repository) SelectAll(ctx context.Context) ([]User, error) {
 
 func (r Repository) Select(ctx context.Context, userID int) (*User, error) {
 	var user User
-
+	fmt.Println(userID)
 	query := "SELECT userId, fname, lname, age, email, passwordHash FROM users WHERE userId =$1"
 	err := r.conn.QueryRow(ctx, query, userID).
 		Scan(&user.UserID, &user.Fname, &user.Lname, &user.Age, &user.Email, &user.PasswordHash)
 
 	if err != nil {
-		return nil, fmt.Errorf("error: %w", err)
+		return nil, fmt.Errorf("error select: %w", err)
 	}
 
 	return &user, nil
