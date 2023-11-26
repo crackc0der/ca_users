@@ -34,7 +34,7 @@ func main() {
 	router.HandleFunc("/get/{id:[0-9]+}", endpoint.GetUser)
 
 	srv := http.Server{
-		Addr:              ":80",
+		Addr:              ":8080",
 		Handler:           router,
 		ReadHeaderTimeout: time.Second * time.Duration(timeout),
 	}
