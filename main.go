@@ -26,6 +26,9 @@ func main() {
 	endpoint := user.NewEndpoint(service)
 
 	router.HandleFunc("/", endpoint.GetAllUsers)
+	router.HandleFunc("/add", endpoint.AddUser)
+	router.HandleFunc("/update/{id:[0-9]+}", endpoint.UpdateUser)
+	router.HandleFunc("/get/{id:[0-9]+}", endpoint.GetUser)
 
 	srv := http.Server{
 		Addr:              ":80",
