@@ -31,7 +31,7 @@ func (r *Repository) Insert(ctx context.Context, user *User) (*User, error) {
 		&newUser.Lname, &newUser.Age, &newUser.Email, &newUser.PasswordHash)
 
 	if err != nil {
-		return nil, fmt.Errorf("error: %w", err)
+		return nil, fmt.Errorf("error INSERT: %w", err)
 	}
 
 	return &newUser, nil

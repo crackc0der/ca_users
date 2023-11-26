@@ -6,5 +6,5 @@ type User struct {
 	Lname        string `json:"lname"`
 	Age          int    `json:"age"`
 	Email        string `json:"email"`
-	PasswordHash []byte `json:"passwordHash"`
+	PasswordHash string `json:"passwordHash"`
 }
