@@ -31,7 +31,7 @@ func (r *Repository) Insert(ctx context.Context, user *User) (*User, error) {
 		&newUser.Lname, &newUser.Age, &newUser.Email, &newUser.PasswordHash)
 
 	if err != nil {
-		return nil, fmt.Errorf("error insert: %w", err)
+		return nil, fmt.Errorf("%w", err)
 	}
 
 	return &newUser, nil
@@ -40,14 +40,14 @@ func (r *Repository) Insert(ctx context.Context, user *User) (*User, error) {
 func (r *Repository) Update(ctx context.Context, user *User) (*User, error) {
 	var updatedUser User
 
-	query := `UPDATE user SET fname= $1, lname=$2, age=$3, email=$4 $passwordHash=$5 WHERE 
-	userId=$6 RETURNING userId, fname, lname, age, email, passwordHash`
+	query := `UPDATE users SET fname = $1, lname = $2, age = $3, email = $4, passwordHash = $5 WHERE 
+	userId=$6 RETURNING fname, lname, age, email, passwordHash`
 	err := r.conn.QueryRow(ctx, query,
 		user.Fname, user.Lname, user.Age, user.Email, user.PasswordHash, user.UserID).Scan(&updatedUser.Fname,
 		&updatedUser.Lname, &updatedUser.Age, &updatedUser.Email, &updatedUser.PasswordHash)
 
 	if err != nil {
-		return nil, fmt.Errorf("error: %w", err)
+		return nil, fmt.Errorf("%w", err)
 	}
 
 	return &updatedUser, nil
@@ -58,7 +58,7 @@ func (r *Repository) Delete(ctx context.Context, userID int) error {
 	_, err := r.conn.Exec(ctx, query, userID)
 
 	if err != nil {
-		return fmt.Errorf("error: %w", err)
+		return fmt.Errorf("%w", err)
 	}
 
 	return nil
@@ -71,7 +71,7 @@ func (r *Repository) SelectAll(ctx context.Context) ([]User, error) {
 	rows, err := r.conn.Query(ctx, query)
 
 	if err != nil {
-		return nil, fmt.Errorf("error: %w", err)
+		return nil, fmt.Errorf("%w", err)
 	}
 
 	for rows.Next() {
@@ -96,7 +96,7 @@ func (r Repository) Select(ctx context.Context, userID int) (*User, error) {
 		Scan(&user.UserID, &user.Fname, &user.Lname, &user.Age, &user.Email, &user.PasswordHash)
 
 	if err != nil {
-		return nil, fmt.Errorf("error select: %w", err)
+		return nil, fmt.Errorf("%w", err)
 	}
 
 	return &user, nil

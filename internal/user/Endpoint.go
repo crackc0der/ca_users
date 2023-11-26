@@ -52,7 +52,7 @@ func (e *Endpoint) AddUser(writer http.ResponseWriter, request *http.Request) {
 
 	addedUser, err := e.service.AddUser(request.Context(), &user)
 	if err != nil {
-		e.log.Error(err.Error())
+		e.log.Error("Error in method AddUser: " + err.Error())
 	}
 
 	if err := json.NewEncoder(writer).Encode(&addedUser); err != nil {
@@ -68,7 +68,7 @@ func (e *Endpoint) UpdateUser(writer http.ResponseWriter, request *http.Request)
 
 	updatedUser, err := e.service.UpdateUser(request.Context(), &user)
 	if err != nil {
-		e.log.Error(err.Error())
+		e.log.Error("Error in method UpdateUser: " + err.Error())
 	}
 
 	if err := json.NewEncoder(writer).Encode(&updatedUser); err != nil {
@@ -77,8 +77,15 @@ func (e *Endpoint) UpdateUser(writer http.ResponseWriter, request *http.Request)
 }
 
 func (e *Endpoint) DeleteUser(writer http.ResponseWriter, request *http.Request) {
-	var userID int
-	if err := json.NewDecoder(request.Body).Decode(&userID); err != nil {
+	vars := mux.Vars(request)
+	userID, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		e.log.Error(err.Error())
+	}
+
+	err = e.service.DeleteUser(request.Context(), userID)
+
+	if err != nil {
 		e.log.Error(err.Error())
 	}
 }
@@ -86,6 +93,6 @@ func (e *Endpoint) DeleteUser(writer http.ResponseWriter, request *http.Request)
 func (e *Endpoint) GetAllUsers(writer http.ResponseWriter, _ *http.Request) {
 	var users []User
 	if err := json.NewEncoder(writer).Encode(&users); err != nil {
-		e.log.Error(err.Error())
+		e.log.Error("Error in method GetAllUsers: " + err.Error())
 	}
 }

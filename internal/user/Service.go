@@ -22,7 +22,6 @@ type Service struct {
 }
 
 func (s *Service) AddUser(ctx context.Context, user *User) (*User, error) {
-	fmt.Println(user)
 	addedUser, err := s.repo.Insert(ctx, user)
 
 	if err != nil {

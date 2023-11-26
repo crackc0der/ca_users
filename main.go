@@ -30,7 +30,8 @@ func main() {
 
 	router.HandleFunc("/", endpoint.GetAllUsers)
 	router.HandleFunc("/add", endpoint.AddUser)
-	router.HandleFunc("/update/{id:[0-9]+}", endpoint.UpdateUser)
+	router.HandleFunc("/update", endpoint.UpdateUser)
+	router.HandleFunc("/delete/{id:[0-9]+}", endpoint.DeleteUser)
 	router.HandleFunc("/get/{id:[0-9]+}", endpoint.GetUser)
 
 	srv := http.Server{
