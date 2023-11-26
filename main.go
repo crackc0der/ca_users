@@ -6,13 +6,17 @@ import (
 	"net/http"
 	"time"
 
+	//nolint
 	"github.com/gorilla/mux"
 )
 
 func main() {
 	router := mux.NewRouter()
 	dsn := "postgres"
+	timeout := 10
+
 	repository, err := user.NewRepository(dsn)
+
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -26,7 +30,7 @@ func main() {
 	srv := http.Server{
 		Addr:              ":80",
 		Handler:           router,
-		ReadHeaderTimeout: time.Second * 10,
+		ReadHeaderTimeout: time.Second * time.Duration(timeout),
 	}
 
 	if err := srv.ListenAndServe(); err != nil {
