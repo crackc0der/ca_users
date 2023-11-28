@@ -14,7 +14,7 @@ import (
 
 func main() {
 	router := mux.NewRouter()
-	dsn := "postgres://postgres:example@localhost:5432/users?sslmode=disable"
+	dsn := "postgres://postgres:7777777@localhost:5432/users?sslmode=disable"
 	timeout := 10
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 

@@ -31,12 +31,12 @@ func (e *Endpoint) GetUser(writer http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	userID, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		e.log.Error("error in method Service.GetUser: " + err.Error())
+		e.log.Error("error in method Endpoint.GetUser: " + err.Error())
 	}
 
 	user, err := e.service.GetUser(request.Context(), userID)
 	if err != nil {
-		e.log.Error("error in method Service.GetUser: " + err.Error())
+		e.log.Error("error in method Endpoint.GetUser: " + err.Error())
 	}
 
 	if err := json.NewEncoder(writer).Encode(&user); err != nil {
@@ -47,12 +47,12 @@ func (e *Endpoint) GetUser(writer http.ResponseWriter, request *http.Request) {
 func (e *Endpoint) AddUser(writer http.ResponseWriter, request *http.Request) {
 	var user User
 	if err := json.NewDecoder(request.Body).Decode(&user); err != nil {
-		e.log.Error("error in method ServiceAddUser:" + err.Error())
+		e.log.Error("error in method Endpoint.AddUser:" + err.Error())
 	}
 
 	addedUser, err := e.service.AddUser(request.Context(), &user)
 	if err != nil {
-		e.log.Error("error in method Service.AddUser: " + err.Error())
+		e.log.Error("error in method Endpoint.AddUser: " + err.Error())
 	}
 
 	if err := json.NewEncoder(writer).Encode(&addedUser); err != nil {
@@ -68,11 +68,11 @@ func (e *Endpoint) UpdateUser(writer http.ResponseWriter, request *http.Request)
 
 	updatedUser, err := e.service.UpdateUser(request.Context(), &user)
 	if err != nil {
-		e.log.Error("error in method Service.UpdateUser: " + err.Error())
+		e.log.Error("error in method Endpoint.UpdateUser: " + err.Error())
 	}
 
 	if err := json.NewEncoder(writer).Encode(&updatedUser); err != nil {
-		e.log.Error("error in method Service.UpdateUser:" + err.Error())
+		e.log.Error("error in method Endpoint.UpdateUser:" + err.Error())
 	}
 }
 
@@ -80,19 +80,19 @@ func (e *Endpoint) DeleteUser(writer http.ResponseWriter, request *http.Request)
 	vars := mux.Vars(request)
 	userID, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		e.log.Error("error in method Service.DeleteUser" + err.Error())
+		e.log.Error("error in method Endpoint.DeleteUser" + err.Error())
 	}
 
 	err = e.service.DeleteUser(request.Context(), userID)
 
 	if err != nil {
-		e.log.Error("error in method Service.DeleteUser" + err.Error())
+		e.log.Error("error in method Endpoint.DeleteUser" + err.Error())
 	}
 }
 
 func (e *Endpoint) GetAllUsers(writer http.ResponseWriter, _ *http.Request) {
 	var users []User
 	if err := json.NewEncoder(writer).Encode(&users); err != nil {
-		e.log.Error("error in method Service.GetAllUsers: " + err.Error())
+		e.log.Error("error in method Endpoint.GetAllUsers: " + err.Error())
 	}
 }
