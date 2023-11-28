@@ -15,7 +15,7 @@ type Repository struct {
 func NewRepository(dns string) (*Repository, error) {
 	conn, err := pgx.Connect(context.Background(), dns)
 	if err != nil {
-		return nil, fmt.Errorf("error: %w", err)
+		return nil, fmt.Errorf("failed create new repository in method NewRepository: %w", err)
 	}
 
 	return &Repository{conn: conn}, nil
@@ -31,7 +31,7 @@ func (r *Repository) Insert(ctx context.Context, user *User) (*User, error) {
 		&newUser.Lname, &newUser.Age, &newUser.Email, &newUser.PasswordHash)
 
 	if err != nil {
-		return nil, fmt.Errorf("%w", err)
+		return nil, fmt.Errorf("error in method insert: %w", err)
 	}
 
 	return &newUser, nil
@@ -47,7 +47,7 @@ func (r *Repository) Update(ctx context.Context, user *User) (*User, error) {
 		&updatedUser.Lname, &updatedUser.Age, &updatedUser.Email, &updatedUser.PasswordHash)
 
 	if err != nil {
-		return nil, fmt.Errorf("%w", err)
+		return nil, fmt.Errorf("error in method update: %w", err)
 	}
 
 	return &updatedUser, nil
@@ -58,7 +58,7 @@ func (r *Repository) Delete(ctx context.Context, userID int) error {
 	_, err := r.conn.Exec(ctx, query, userID)
 
 	if err != nil {
-		return fmt.Errorf("%w", err)
+		return fmt.Errorf("error in method Delete: %w", err)
 	}
 
 	return nil
@@ -71,7 +71,7 @@ func (r *Repository) SelectAll(ctx context.Context) ([]User, error) {
 	rows, err := r.conn.Query(ctx, query)
 
 	if err != nil {
-		return nil, fmt.Errorf("%w", err)
+		return nil, fmt.Errorf("error in method SelectAll: %w", err)
 	}
 
 	for rows.Next() {
@@ -96,7 +96,7 @@ func (r Repository) Select(ctx context.Context, userID int) (*User, error) {
 		Scan(&user.UserID, &user.Fname, &user.Lname, &user.Age, &user.Email, &user.PasswordHash)
 
 	if err != nil {
-		return nil, fmt.Errorf("%w", err)
+		return nil, fmt.Errorf("error in method Select: %w", err)
 	}
 
 	return &user, nil

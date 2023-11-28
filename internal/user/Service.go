@@ -25,7 +25,7 @@ func (s *Service) AddUser(ctx context.Context, user *User) (*User, error) {
 	addedUser, err := s.repo.Insert(ctx, user)
 
 	if err != nil {
-		return nil, fmt.Errorf("error insering user: %w", err)
+		return nil, fmt.Errorf("error in method Service.AddUser: %w", err)
 	}
 
 	return addedUser, nil
@@ -34,7 +34,7 @@ func (s *Service) AddUser(ctx context.Context, user *User) (*User, error) {
 func (s *Service) UpdateUser(ctx context.Context, user *User) (*User, error) {
 	updatedUser, err := s.repo.Update(ctx, user)
 	if err != nil {
-		return nil, fmt.Errorf("error updating user: %w", err)
+		return nil, fmt.Errorf("error in method Service.UpdateUser: %w", err)
 	}
 
 	return updatedUser, nil
@@ -43,7 +43,7 @@ func (s *Service) UpdateUser(ctx context.Context, user *User) (*User, error) {
 func (s *Service) DeleteUser(ctx context.Context, userID int) error {
 	err := s.repo.Delete(ctx, userID)
 	if err != nil {
-		return fmt.Errorf("error deleting user: %w", err)
+		return fmt.Errorf("error in method Service.DeleteUser: %w", err)
 	}
 
 	return nil
@@ -52,7 +52,7 @@ func (s *Service) DeleteUser(ctx context.Context, userID int) error {
 func (s *Service) GetAllUsers(ctx context.Context) ([]User, error) {
 	users, err := s.repo.SelectAll(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("error getting all users: %w", err)
+		return nil, fmt.Errorf("error in method Service.GetAllUsers: %w", err)
 	}
 
 	return users, nil
@@ -61,7 +61,7 @@ func (s *Service) GetAllUsers(ctx context.Context) ([]User, error) {
 func (s *Service) GetUser(ctx context.Context, userID int) (*User, error) {
 	user, err := s.repo.Select(ctx, userID)
 	if err != nil {
-		return nil, fmt.Errorf("error ger user: %w", err)
+		return nil, fmt.Errorf("error in method Service.GetUser: %w", err)
 	}
 
 	return user, nil
