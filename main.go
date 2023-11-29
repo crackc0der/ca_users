@@ -46,7 +46,7 @@ func main() {
 
 	//nolint
 	srv := http.Server{
-		Addr:              ":8080",
+		Addr:              config.Host.HostPort,
 		Handler:           router,
 		ReadHeaderTimeout: time.Second * time.Duration(timeout),
 	}
