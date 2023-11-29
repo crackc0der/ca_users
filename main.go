@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/crackc0der/users/config"
 	"github.com/crackc0der/users/internal/user"
 
 	//nolint
@@ -14,8 +15,15 @@ import (
 )
 
 func main() {
+	config, err := config.NewConfig()
+
+	if err != nil {
+		log.Fatal("error decode config file: ", err)
+	}
+
 	router := mux.NewRouter()
-	dsn := "postgres://postgres:7777777@localhost:5432/users?sslmode=disable"
+	dsn := "postgres://" + config.DataBase.DBUser + ":" + config.DataBase.DBPassword + "@" + config.DataBase.DBHost +
+		":" + config.DataBase.DBPort + "/" + config.DataBase.DBName + "?sslmode=disable"
 	timeout := 10
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 

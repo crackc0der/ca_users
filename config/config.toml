@@ -1,0 +1,9 @@
+[DataBase]
+dbHost = "localhost"
+dbPort = "5432"
+dbName = "users"
+dbUser = "postgres"
+dbPassword = "7777777"
+
+[Host]
+hostPort = "8080"
