@@ -2,30 +2,45 @@ package config
 
 import (
 	"fmt"
+	"io"
+	"os"
 
-	//nolint
-	"github.com/BurntSushi/toml"
+	"gopkg.in/yaml.v3"
 )
 
 type Config struct {
 	DataBase struct {
-		DBHost     string `toml:"dbHost"`
-		DBPort     string `toml:"dbPort"`
-		DBName     string `toml:"dbName"`
-		DBUser     string `toml:"dbUser"`
-		DBPassword string `toml:"dbPassword"`
-	} `toml:"DataBase"`
+		DBHost     string `yaml:"dbHost"`
+		DBPort     string `yaml:"dbPort"`
+		DBName     string `yaml:"dbName"`
+		DBUser     string `yaml:"dbUser"`
+		DBPassword string `yaml:"dbPassword"`
+	} `yaml:"dataBase"`
 
 	Host struct {
-		HostPort string `toml:"hostPort"`
-	} `toml:"Host"`
+		HostPort string `yaml:"hostPort"`
+	} `yaml:"host"`
 }
 
 func NewConfig() (*Config, error) {
 	var config Config
 
-	if _, err := toml.DecodeFile("config/config.toml", &config); err != nil {
+	configFile, err := os.Open("config/config.yaml")
+	if err != nil {
 		return nil, fmt.Errorf("error decode config file: %w", err)
+	}
+
+	defer configFile.Close()
+
+	configBytes, err := io.ReadAll(configFile)
+	if err != nil {
+		panic(err)
+	}
+
+	err = yaml.Unmarshal(configBytes, &config)
+
+	if err != nil {
+		return nil, fmt.Errorf("error unmarshal yaml config: %w", err)
 	}
 
 	return &config, nil

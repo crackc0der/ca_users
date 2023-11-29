@@ -93,9 +93,13 @@ func (e *Endpoint) DeleteUser(_ http.ResponseWriter, request *http.Request) {
 	}
 }
 
-func (e *Endpoint) GetAllUsers(writer http.ResponseWriter, _ *http.Request) {
-	var users []User
-	if err := json.NewEncoder(writer).Encode(&users); err != nil {
+func (e *Endpoint) GetAllUsers(writer http.ResponseWriter, request *http.Request) {
+	users, err := e.service.GetAllUsers(request.Context())
+	if err != nil {
+		e.log.Error("error in method Endpoint.GetAllUsers" + err.Error())
+	}
+
+	if err = json.NewEncoder(writer).Encode(&users); err != nil {
 		e.log.Error("error in method Endpoint.GetAllUsers: " + err.Error())
 	}
 }
