@@ -1,12 +1,13 @@
 package main
 
 import (
-	"ca/internal/user"
 	"log"
 	"log/slog"
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/crackc0der/users/internal/user"
 
 	//nolint
 	"github.com/gorilla/mux"
