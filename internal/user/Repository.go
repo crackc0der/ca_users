@@ -90,7 +90,7 @@ func (r *Repository) SelectAll(ctx context.Context) ([]User, error) {
 
 func (r Repository) Select(ctx context.Context, userID int) (*User, error) {
 	var user User
-	fmt.Println(userID)
+
 	query := "SELECT userID, fname, lname, age, email, passwordHash FROM users WHERE userId = $1"
 	err := r.conn.QueryRow(ctx, query, userID).
 		Scan(&user.UserID, &user.Fname, &user.Lname, &user.Age, &user.Email, &user.PasswordHash)

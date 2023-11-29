@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
+	//nolint
 	"github.com/gorilla/mux"
 )
 
@@ -30,6 +31,7 @@ type Endpoint struct {
 func (e *Endpoint) GetUser(writer http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	userID, err := strconv.Atoi(vars["id"])
+
 	if err != nil {
 		e.log.Error("error in method Endpoint.GetUser: " + err.Error())
 	}
@@ -76,9 +78,10 @@ func (e *Endpoint) UpdateUser(writer http.ResponseWriter, request *http.Request)
 	}
 }
 
-func (e *Endpoint) DeleteUser(writer http.ResponseWriter, request *http.Request) {
+func (e *Endpoint) DeleteUser(_ http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	userID, err := strconv.Atoi(vars["id"])
+
 	if err != nil {
 		e.log.Error("error in method Endpoint.DeleteUser" + err.Error())
 	}
