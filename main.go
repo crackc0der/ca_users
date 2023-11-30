@@ -7,24 +7,22 @@ import (
 	"os"
 	"time"
 
-	//nolint
 	"github.com/crackc0der/users/config"
-	//nolint
+
 	"github.com/crackc0der/users/internal/user"
-	//nolint
+
 	"github.com/gorilla/mux"
 )
 
 func main() {
 	config, err := config.NewConfig()
+	dsn := config.GetDsn()
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	router := mux.NewRouter()
-	dsn := "postgres://" + config.DataBase.DBUser + ":" + config.DataBase.DBPassword + "@" + config.DataBase.DBHost +
-		":" + config.DataBase.DBPort + "/" + config.DataBase.DBName + "?sslmode=disable"
 	timeout := 10
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 

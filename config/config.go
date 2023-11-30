@@ -45,3 +45,8 @@ func NewConfig() (*Config, error) {
 
 	return &config, nil
 }
+
+func (config *Config) GetDsn() string {
+	return "postgres://" + config.DataBase.DBUser + ":" + config.DataBase.DBPassword + "@" + config.DataBase.DBHost +
+		":" + config.DataBase.DBPort + "/" + config.DataBase.DBName + "?sslmode=disable"
+}

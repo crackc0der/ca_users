@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	//nolint
 	"github.com/jackc/pgx/v5"
 	"golang.org/x/crypto/bcrypt"
 )
