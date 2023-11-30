@@ -9,17 +9,20 @@ import (
 )
 
 type Config struct {
-	DataBase struct {
-		DBHost     string `yaml:"dbHost"`
-		DBPort     string `yaml:"dbPort"`
-		DBName     string `yaml:"dbName"`
-		DBUser     string `yaml:"dbUser"`
-		DBPassword string `yaml:"dbPassword"`
-	} `yaml:"dataBase"`
+	DataBase dataBase `yaml:"dataBase"`
+	Host     host     `yaml:"host"`
+}
 
-	Host struct {
-		HostPort string `yaml:"hostPort"`
-	} `yaml:"host"`
+type dataBase struct {
+	DBHost     string `yaml:"dbHost"`
+	DBPort     string `yaml:"dbPort"`
+	DBName     string `yaml:"dbName"`
+	DBUser     string `yaml:"dbUser"`
+	DBPassword string `yaml:"dbPassword"`
+}
+
+type host struct {
+	HostPort string `yaml:"hostPort"`
 }
 
 func NewConfig() (*Config, error) {
