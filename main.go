@@ -8,9 +8,7 @@ import (
 	"time"
 
 	"github.com/crackc0der/users/config"
-
 	"github.com/crackc0der/users/internal/user"
-
 	"github.com/gorilla/mux"
 )
 
