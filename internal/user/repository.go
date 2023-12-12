@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -65,7 +66,7 @@ func (r *Repository) Update(ctx context.Context, user *User) (*User, error) {
 	return &updatedUser, nil
 }
 
-func (r *Repository) Delete(ctx context.Context, userID int) error {
+func (r *Repository) Delete(ctx context.Context, userID uuid.UUID) error {
 	query := "DELETE FROM users WHERE userID=$1"
 	_, err := r.conn.Exec(ctx, query, userID)
 
@@ -100,7 +101,7 @@ func (r *Repository) SelectAll(ctx context.Context) ([]User, error) {
 	return users, nil
 }
 
-func (r Repository) Select(ctx context.Context, userID int) (*User, error) {
+func (r Repository) Select(ctx context.Context, userID uuid.UUID) (*User, error) {
 	var user User
 
 	query := "SELECT userID, fname, lname, age, email, passwordHash FROM users WHERE userId = $1"

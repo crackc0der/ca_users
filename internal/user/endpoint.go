@@ -5,17 +5,17 @@ import (
 	"encoding/json"
 	"log/slog"
 	"net/http"
-	"strconv"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 )
 
 type service interface {
 	AddUser(ctx context.Context, user *User) (*User, error)
 	UpdateUser(ctx context.Context, user *User) (*User, error)
-	DeleteUser(ctx context.Context, userID int) error
+	DeleteUser(ctx context.Context, userID uuid.UUID) error
 	GetAllUsers(ctx context.Context) ([]User, error)
-	GetUser(ctx context.Context, userID int) (*User, error)
+	GetUser(ctx context.Context, userID uuid.UUID) (*User, error)
 }
 
 func NewEndpoint(service *Service, log *slog.Logger) *Endpoint {
@@ -29,11 +29,7 @@ type Endpoint struct {
 
 func (e *Endpoint) GetUser(writer http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
-	userID, err := strconv.Atoi(vars["id"])
-
-	if err != nil {
-		e.log.Error("error in method Endpoint.GetUser: " + err.Error())
-	}
+	userID := uuid.MustParse(vars["id"])
 
 	user, err := e.service.GetUser(request.Context(), userID)
 	if err != nil {
@@ -79,13 +75,9 @@ func (e *Endpoint) UpdateUser(writer http.ResponseWriter, request *http.Request)
 
 func (e *Endpoint) DeleteUser(_ http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
-	userID, err := strconv.Atoi(vars["id"])
+	userID := uuid.MustParse(vars["id"])
 
-	if err != nil {
-		e.log.Error("error in method Endpoint.DeleteUser" + err.Error())
-	}
-
-	err = e.service.DeleteUser(request.Context(), userID)
+	err := e.service.DeleteUser(request.Context(), userID)
 
 	if err != nil {
 		e.log.Error("error in method Endpoint.DeleteUser" + err.Error())

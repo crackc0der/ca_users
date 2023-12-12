@@ -3,14 +3,16 @@ package user
 import (
 	"context"
 	"fmt"
+
+	"github.com/google/uuid"
 )
 
 type repository interface {
 	Insert(ctx context.Context, user *User) (*User, error)
 	Update(ctx context.Context, user *User) (*User, error)
-	Delete(ctx context.Context, userID int) error
+	Delete(ctx context.Context, userID uuid.UUID) error
 	SelectAll(ctx context.Context) ([]User, error)
-	Select(ctx context.Context, userID int) (*User, error)
+	Select(ctx context.Context, userID uuid.UUID) (*User, error)
 }
 
 func NewService(repo repository) *Service {
@@ -40,7 +42,7 @@ func (s *Service) UpdateUser(ctx context.Context, user *User) (*User, error) {
 	return updatedUser, nil
 }
 
-func (s *Service) DeleteUser(ctx context.Context, userID int) error {
+func (s *Service) DeleteUser(ctx context.Context, userID uuid.UUID) error {
 	err := s.repo.Delete(ctx, userID)
 	if err != nil {
 		return fmt.Errorf("error in method Service.DeleteUser: %w", err)
@@ -58,7 +60,7 @@ func (s *Service) GetAllUsers(ctx context.Context) ([]User, error) {
 	return users, nil
 }
 
-func (s *Service) GetUser(ctx context.Context, userID int) (*User, error) {
+func (s *Service) GetUser(ctx context.Context, userID uuid.UUID) (*User, error) {
 	user, err := s.repo.Select(ctx, userID)
 	if err != nil {
 		return nil, fmt.Errorf("error in method Service.GetUser: %w", err)
