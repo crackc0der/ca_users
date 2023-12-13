@@ -33,5 +33,5 @@ func (m *MockRepository) SelectAll(ctx context.Context) ([]User, error) {
 
 func (m *MockRepository) Select(ctx context.Context, userId uuid.UUID) (*User, error) {
 	args := m.Called(ctx, userId)
-	return args.Get(0).(*User), args.Error(0)
+	return args.Get(0).(*User), args.Error(1)
 }
