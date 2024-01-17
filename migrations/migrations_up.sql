@@ -1,5 +1,5 @@
 create table if not exists users (
-    userID serial primary key,
+    userID UUID primary key,
     fname varchar(64) not null,
     lname varchar (64) not null,
     age int not null,

@@ -31,10 +31,10 @@ func (r *Repository) Insert(ctx context.Context, user *User) (*User, error) {
 		return nil, fmt.Errorf("error encrypting password: %w", err)
 	}
 
-	query := `INSERT INTO users (fname, lname, age, email, passwordHash) VALUES ($1, $2, $3, $4, $5) 
+	query := `INSERT INTO users (userid, fname, lname, age, email, passwordHash) VALUES ($1, $2, $3, $4, $5, $6) 
 	RETURNING userId, fname, lname, age, email, passwordHash`
 	err = r.conn.QueryRow(ctx, query,
-		user.Fname, user.Lname, user.Age, user.Email, password).Scan(&newUser.UserID, &newUser.Fname,
+		user.UserID, user.Fname, user.Lname, user.Age, user.Email, password).Scan(&newUser.UserID, &newUser.Fname,
 		&newUser.Lname, &newUser.Age, &newUser.Email, &newUser.PasswordHash)
 
 	if err != nil {

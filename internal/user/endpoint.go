@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log/slog"
 	"net/http"
 
@@ -43,6 +44,7 @@ func (e *Endpoint) GetUser(writer http.ResponseWriter, request *http.Request) {
 
 func (e *Endpoint) AddUser(writer http.ResponseWriter, request *http.Request) {
 	var user User
+	user.UserID = uuid.New()
 	if err := json.NewDecoder(request.Body).Decode(&user); err != nil {
 		e.log.Error("error in method Endpoint.AddUser:" + err.Error())
 	}
@@ -76,7 +78,7 @@ func (e *Endpoint) UpdateUser(writer http.ResponseWriter, request *http.Request)
 func (e *Endpoint) DeleteUser(_ http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	userID := uuid.MustParse(vars["id"])
-
+	fmt.Println(userID)
 	err := e.service.DeleteUser(request.Context(), userID)
 
 	if err != nil {

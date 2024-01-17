@@ -8,11 +8,6 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type Config struct {
-	DataBase dataBase `yaml:"dataBase"`
-	Host     host     `yaml:"host"`
-}
-
 type dataBase struct {
 	DBHost     string `yaml:"dbHost"`
 	DBPort     string `yaml:"dbPort"`
@@ -25,10 +20,15 @@ type host struct {
 	HostPort string `yaml:"hostPort"`
 }
 
+type Config struct {
+	DataBase dataBase `yaml:"dataBase"`
+	Host     host     `yaml:"host"`
+}
+
 func NewConfig() (*Config, error) {
 	var config Config
-
-	configFile, err := os.Open("config/config.yaml")
+	pathToYamlFile := "../../config/config.yaml"
+	configFile, err := os.Open(pathToYamlFile)
 	if err != nil {
 		return nil, fmt.Errorf("error decode config file: %w", err)
 	}
