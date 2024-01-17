@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/crackc0der/users/utils"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type Repository struct {
@@ -25,7 +25,7 @@ func NewRepository(dns string) (*Repository, error) {
 func (r *Repository) Insert(ctx context.Context, user *User) (*User, error) {
 	var newUser User
 
-	password, err := r.passwordHash(user.PasswordHash)
+	password, err := utils.PasswordHash(user.PasswordHash)
 
 	if err != nil {
 		return nil, fmt.Errorf("error encrypting password: %w", err)
@@ -47,7 +47,7 @@ func (r *Repository) Insert(ctx context.Context, user *User) (*User, error) {
 func (r *Repository) Update(ctx context.Context, user *User) (*User, error) {
 	var updatedUser User
 
-	password, err := r.passwordHash(user.PasswordHash)
+	password, err := utils.PasswordHash(user.PasswordHash)
 
 	if err != nil {
 		return nil, fmt.Errorf("error encrypting password: %w", err)
@@ -113,13 +113,4 @@ func (r Repository) Select(ctx context.Context, userID uuid.UUID) (*User, error)
 	}
 
 	return &user, nil
-}
-
-func (r *Repository) passwordHash(password string) (string, error) {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	if err != nil {
-		return "", fmt.Errorf("password encryption error: %w", err)
-	}
-
-	return string(hashedPassword), nil
 }
