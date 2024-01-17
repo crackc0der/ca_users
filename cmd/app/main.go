@@ -14,11 +14,11 @@ import (
 
 func main() {
 	config, err := config.NewConfig()
-	dsn := config.GetDsn()
-
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	dsn := config.GetDsn()
 
 	router := mux.NewRouter()
 	timeout := 10
@@ -37,7 +37,7 @@ func main() {
 	router.HandleFunc("/", endpoint.GetAllUsers)
 	router.HandleFunc("/add", endpoint.AddUser)
 	router.HandleFunc("/update", endpoint.UpdateUser)
-	router.HandleFunc("/delete/{id:[0-9]+}", endpoint.DeleteUser)
+	router.HandleFunc("/delete/{id}", endpoint.DeleteUser)
 	router.HandleFunc("/get/{id:[0-9]+}", endpoint.GetUser)
 
 	//nolint
